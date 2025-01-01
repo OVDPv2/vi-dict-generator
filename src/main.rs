@@ -11,14 +11,10 @@ fn main() -> anyhow::Result<()> {
 
     let dictionary_file = Path::new(&args[1]);
     let dataset = Path::new(&args[2]);
-    
-    println!("Vietnamese Dictionary API Generator");
-    println!("Processing {}, using dataset: {}", dictionary_file.to_str().unwrap(), dataset.to_str().unwrap());
-    
+
     let binding = fs::read_to_string(&dataset)?;
     let lines: Vec<&str> = binding.lines().collect();
 
     add_glossaries_to_api(dictionary_file, &lines)?;
     Ok(())
 }
-
