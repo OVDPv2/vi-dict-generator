@@ -68,18 +68,16 @@ pub fn find_first_char(word: &str) -> String {
     word.chars().next().unwrap().to_string().to_lowercase()
 }
 
-pub fn find_example_sentences(word: &str, content: &Vec<String>) -> anyhow::Result<Vec<String>> {
-    let mut lines = Vec::new();
-
-    for line in content {
-        if lines.len() > 10 {
-            break;
-        }
-
-        if line.contains(word) {
-            lines.push(line.clone());
-        }
-    }
+pub fn find_example_sentences(word: &str, content: &Vec<&str>) 
+    -> anyhow::Result<Vec<String>> 
+{
+    let lines: Vec<String> = content
+        .iter()
+        .filter(|line| line.contains(word))
+        .take(10)
+        .copied()
+        .map(|f| f.to_string())
+        .collect();
 
     Ok(lines)
 }

@@ -36,15 +36,15 @@ Chương trình này sẽ làm gì:
 
 */
 
-pub fn add_glossaries_to_api(file_name: &Path, sentence_content: &Vec<String>) -> anyhow::Result<()> {
-    let file_handler = File::open(file_name).expect("Couldn't read the dictionary file");
+pub fn add_glossaries_to_api(file_name: &Path, sentence_content: &Vec<&str>) -> anyhow::Result<()> {
+    let file_handler = File::open(file_name)?;
     let reader = BufReader::new(file_handler);
 
     for line in reader.lines() {
         let line = line?; 
         match extract_term_definition(&line) {
             Some((word, definition)) => {
-                let sentences = utils::find_example_sentences(word, &sentence_content)?;
+                let sentences = utils::find_example_sentences(word, sentence_content)?;
                 let current_glossary = create_individual_glossary(word, definition, sentences);
                 utils::write_to_corresponding_files(current_glossary)?;
             },

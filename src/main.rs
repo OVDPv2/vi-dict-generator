@@ -1,5 +1,5 @@
-use std::{env, fs::File, io::{BufRead, BufReader}, path::Path};
-use anyhow::{Context, Ok};
+use std::{env, fs, path::Path};
+use anyhow::Ok;
 use glossary::add_glossaries_to_api;
 
 mod utils;
@@ -14,15 +14,11 @@ fn main() -> anyhow::Result<()> {
     
     println!("Vietnamese Dictionary API Generator");
     println!("Processing {}, using dataset: {}", dictionary_file.to_str().unwrap(), dataset.to_str().unwrap());
-    let file_handler =
-        File::open(dataset).context("Couldn't read the dataset")?;
-    let reader = BufReader::new(file_handler);
-
-    let lines: Vec<String> = reader
-        .lines()
-        .map_while(Result::ok)
-        .collect();
     
+    let binding = fs::read_to_string(&dataset)?;
+    let lines: Vec<&str> = binding.lines().collect();
+
     add_glossaries_to_api(dictionary_file, &lines)?;
     Ok(())
 }
+
