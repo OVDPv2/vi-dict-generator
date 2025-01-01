@@ -74,7 +74,7 @@ pub fn find_example_sentences(word: &str, content: &Vec<&str>)
     let lines: Vec<String> = content
         .iter()
         .filter(|line| line.contains(word))
-        .take(10)
+        .take(5)
         .copied()
         .map(|f| f.to_string())
         .collect();
@@ -89,11 +89,9 @@ pub fn write_to_corresponding_files(
     let first_char = find_first_char(&entry.word);
     let file_name = filter_character(&first_char);
     let json_file = create_writable_file(&file_name)?;
-    /*
-    Write to file - json
-    */
     let mut writer = BufWriter::new(json_file);
-    serde_json::to_writer(&mut writer, &entry)?;
+    serde_json::to_writer_pretty(&mut writer, &entry)?;
+    writeln!(&mut writer, ",")?;
     writer.flush()?;
     Ok(())
 }
